@@ -1,0 +1,26 @@
+{
+  "name": "mooc-vis",
+  "version": "1.0.0",
+  "description": "MOOC course network visualization with parallel coordinates",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heungseok/MOOC_vis.git"
+  },
+  "keywords": [
+    "network",
+    "visualization",
+    "parallel",
+    "coordinate",
+    "MOOC"
+  ],
+  "author": "Heungseok Park",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/heungseok/MOOC_vis/issues"
+  },
+  "homepage": "https://github.com/heungseok/MOOC_vis#readme"
+}
