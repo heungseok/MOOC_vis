@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/heungseok/MOOC_vis/issues"
   },
-  "homepage": "https://github.com/heungseok/MOOC_vis#readme"
+  "homepage": "https://github.com/heungseok/MOOC_vis#readme",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
 }
