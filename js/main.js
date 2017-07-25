@@ -5,12 +5,13 @@ var s,
         nodes: [],
         edges: []
     };
+// s: sigma object, g: graph(network) object
 
 var url_arr = [
     "../data/t1_classCentral_network.json",
     "../data/t2_classCentral_network.json",
     "../data/t3_classCentral_network.json",
-    "../data/t4_classCentral_network.json",
+    "../data/t4_classCentral_network.json"
     ];
 
 
@@ -61,17 +62,23 @@ function sigma_init(network){
     network.nodes.forEach(function(node, index){
         g.nodes.push({
             id: node.course_id,
-            node_id: node.attributes.node_id,
+            node_id: node.attributes.index,
             label: node.attributes.title,
             x: node.x,
             y: node.y,
             size: node.size,
             color: node.color,
+            area: node.attributes.area,
+            subject: node.attributes.subject,
+            provider: node.attributes.provider,
+            school: node.attributes.school,
 
-            target_color: "#d30bee",
-            target_size: 20,
-            target_x: -1.253332335643046,
-            target_y: -9.921147013144777
+
+            // this is for animating node
+            target_color: "#FFFFFF",
+            target_size: 10,
+            target_x: -1000,
+            target_y: -1000
 
         });
     });
@@ -118,8 +125,7 @@ function sigma_init(network){
 
 
     console.log(s.graph.nodes());
-
-    network_arr.sort(compare);
+    network_arr.sort(compare); // sort by time
     console.log(network_arr);
 
 
@@ -128,37 +134,74 @@ function sigma_init(network){
 
 // ####################### Init utility ####################
 
-// attach addTargetNodeAttr fucntion to sigma graph method
-sigma.classes.graph.addMethod('addTargetNodeAttr', function(target_network) {
-    var l = this.nodesArray.length,
+// attach addTargetNodeAttr function to sigma graph method
+sigma.classes.graph.addMethod('add_TargetNode_Attr', function(target_nodes) {
+    // nodesArray는 node info를 담고있는 sigma class 내장 변수인듯,
+    console.log(target_nodes);
+
+    console.log(this.nodesArray)
+    var net_size = this.nodesArray.length,
         source;
+    var target_nodes_ids = _.pluck(target_nodes, 'course_id');
+    var node_to_remove = []
+    // 먼저 시간간격안에 겹치지 않는 노드들 삭제
+    for(i=0; i<net_size; i++){
+        console.log(this.nodesArray[i]);
+        if(!_.contains(target_nodes_ids, this.nodesArray[i].id)){
+            node_to_remove.push(_.indexOf(target_nodes_ids, this.nodesArray[i].id));
+            // this.nodesArray.splice(i, 1); /// removes 1 element from index i
 
-
-    // assingn the target node from source.
-    for(i=0; i<l; i++){
-        source = this.nodesArray[i];
-        // console.log(this.nodesArray[i]);
-        for(index in target_network.nodes){
-            var target_node = target_network.nodes[index];
-            // console.log(source.node_id);
-            // console.log(target_node);
-
-            if(source.node_id == target_node.attributes.node_id){
-                // console.log(source.label);
-                // console.log("Matched!! before chainging node");
-                // console.log(this.nodesArray[i]);
-                this.nodesArray[i].target_color = target_node.color;
-                this.nodesArray[i].target_x = target_node.x;
-                this.nodesArray[i].target_y = target_node.y;
-                this.nodesArray[i].target_size = target_node.size;
-
-                // console.log("after chainging node");
-                // console.log(this.nodesArray[i]);
-            }
         }
     }
+    for(index in node_to_remove){
+        this.nodesArray.splice(node_to_remove[index], 1);
+    }
+
+    var source_nodes_ids = _.pluck(this.nodesArray, 'id');
+    // 다음으로 node update
+    for(i=0; i<target_nodes.length; i++){
+
+        var target = target_nodes[i];
+        if(_.contains(source_nodes_ids, target.course_id)){
+            var temp_index = _.indexOf(source_nodes_ids, target.course_id);
+            console.log("Matched!!");
+            // console.log(this.nodesArray[i]);
+            this.nodesArray[temp_index].target_color = target.color;
+            this.nodesArray[temp_index].target_x = target.x;
+            this.nodesArray[temp_index].target_y = target.y;
+            this.nodesArray[temp_index].target_size = target.size;
+
+        }else{
+            this.nodesArray.push({
+                id: target.course_id,
+                node_id: target.attributes.index,
+                label: target.attributes.title,
+                x: target.x,
+                y: target.y,
+                size: target.size,
+                color: target.color,
+                area: target.attributes.area,
+                subject: target.attributes.subject,
+                provider: target.attributes.provider,
+                school: target.attributes.school,
+
+
+                // this is for animating node
+                target_color: "#FFFFFF",
+                target_size: 10,
+                target_x: -100000,
+                target_y: -100000
+
+            })
+        }
+
+    }
+
 
 });
+
+
+
 
 // attach updateEdge function to sigma graph method
 sigma.classes.graph.addMethod('updateEdge', function(target_network){
@@ -259,7 +302,6 @@ sigma.classes.graph.addMethod('updateEdge2', function(target_network){
             size: target_edge.size,
             color: target_edge.color,
             type: "curvedArrow",
-            // type: "curve",
             flag: false
 
         }
@@ -362,9 +404,10 @@ $("#reset-btn").click(function(){
 // call the binded function in sigam.graph
 function changeNetwork(from, to){
 
+    console.log(from + "-" + to )
     var target_network = network_arr[to-1];
-    s.graph.addTargetNodeAttr(target_network);
-    s.graph.updateEdge2(target_network);
+    s.graph.add_TargetNode_Attr(target_network.nodes);
+    // s.graph.updateEdge2(target_network);
     animation();
 }
 
