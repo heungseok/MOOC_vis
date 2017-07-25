@@ -63,6 +63,7 @@
     <script src="./lib/sigma/misc/sigma.misc.drawHovers.js"></script>
     <!-- END SIGMA IMPORTS -->
     <script src="./lib/sigma/plugins/sigma.parsers.json/sigma.parsers.json.js"></script>
+    <script src="./lib/sigma/plugins/sigma.plugins.animate.js"></script>
 
 
 
@@ -75,7 +76,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top" style="position: absolute; left:0; top:0">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">MOOCvis</a>
+                <a class="navbar-brand" href="#">MOOCVis</a>
             </div>
 
 
@@ -93,6 +94,24 @@
 
     <div id="container">
         <div id="graph-container"></div>
+
+        <div id="control-pane">
+            <h2 class="underline">filters</h2>
+
+            <div>
+                <h3>T <span id="current_date">1</span></h3>
+                1 <input id="min-degree" type="range" min="1" max="5" value="0" step="1" onchange="showValue(this.value)" /> <span id="max-degree-value">5</span><br>
+            </div>
+            <span class="line"></span>
+            <div>
+                <button id="reset-btn">Reset</button>
+                <button id="plus-btn">Plus</button>
+                <button id="minus-btn">Minus</button>
+                <button id="play-btn">Play</button>
+            </div>
+            <div id="dump" class="hidden"></div>
+        </div>
+
     </div>
 
     <script src="./js/main.js"></script>
