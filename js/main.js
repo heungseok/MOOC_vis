@@ -10,10 +10,10 @@ var s,
 // s: sigma object, g: graph(network) object
 
 var url_arr = [
-    "../data/t1_" + platform + "_network.json",
-    "../data/t2_" + platform + "_network.json",
-    "../data/t3_" + platform + "_network.json",
-    "../data/t4_" + platform + "_network.json"
+    "./data/t1_" + platform + "_network.json",
+    "./data/t2_" + platform + "_network.json",
+    "./data/t3_" + platform + "_network.json",
+    "./data/t4_" + platform + "_network.json"
     ];
 
 /*
