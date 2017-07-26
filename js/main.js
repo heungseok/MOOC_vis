@@ -8,10 +8,10 @@ var s,
 // s: sigma object, g: graph(network) object
 
 var url_arr = [
-    "../data/t1_classCentral_network.json",
-    "../data/t2_classCentral_network.json",
-    "../data/t3_classCentral_network.json",
-    "../data/t4_classCentral_network.json"
+    "../data/t1_" + platform + "_network.json",
+    "../data/t1_" + platform + "_network.json",
+    "../data/t1_" + platform + "_network.json",
+    "../data/t1_" + platform + "_network.json"
     ];
 
 
@@ -29,17 +29,17 @@ function init() {
     $.getJSON(url_arr[0], function(data, textStatus, jqXHR){
         network_arr.push(data);
         sigma_init(network_arr[0]);
+
     });
     for(var i=1; i<url_arr.length;i++){
         requestData(i);
     }
-
 }
 
 function requestData(index){
 
     $.getJSON(url_arr[index], function(data, textStatus, jqXHR){
-        // console.log(data);
+
         network_arr.push(data);
         network_arr.sort(compare);
     });
@@ -405,3 +405,36 @@ function animation(){
     );
 }
 
+function switchPlatform(btn_platform) {
+    var targetPlatform = btn_platform.innerHTML;
+
+    if(targetPlatform !== platform){
+        platform = targetPlatform;
+        cleanNetwork();
+        switchNetwork();
+    }
+    // 같을 경우 do nothing;
+}
+
+function cleanNetwork() {
+    s.graph.clear();
+    g.nodes.length = 0;
+    g.edges.length = 0;
+    g.nodes = [];
+    g.edges = [];
+}
+
+function switchNetwork() {
+    console.log(platform)
+    url_arr.length = 0;
+    url_arr = [
+        "../data/t1_" + platform + "_network.json",
+        "../data/t1_" + platform + "_network.json",
+        "../data/t1_" + platform + "_network.json",
+        "../data/t1_" + platform + "_network.json"
+    ];
+    init();
+
+
+    
+}

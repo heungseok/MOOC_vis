@@ -113,8 +113,14 @@
         <div id="pc-container"></div>
 
         <div id="control-pane">
-            <h2 class="underline">Play</h2>
+            <h2 class="underline">Platform</h2>
+            <div>
+                <button class="platform" onclick="switchPlatform(this)">classCentral</button>
+                <button class="platform" onclick="switchPlatform(this)">courseTalk</button>
 
+            </div>
+
+            <h2 class="underline">Play</h2>
             <div>
                 <h3>T-<span id="current_date">1</span></h3>
                 1 <input id="min-degree" type="range" min="1" max="4" value="0" step="1" onchange="showValue(this.value)" /> <span id="max-degree-value">4</span><br>
