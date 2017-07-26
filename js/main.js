@@ -138,71 +138,64 @@ function sigma_init(network){
 sigma.classes.graph.addMethod('add_TargetNode_Attr', function(target_nodes) {
     // nodesArray는 node info를 담고있는 sigma class 내장 변수인듯,
 
-    console.log(this.nodesArray)
-    var net_size = this.nodesArray.length,
-        source;
+    // underscore.js의 pluck을 이용해서 target_nodes 의 각 object에서 course_id만 뽑아서 array로 만듬.
     var target_nodes_ids = _.pluck(target_nodes, 'course_id');
-    var node_to_remove = []
+    var node_to_remove = [];
+
     // 먼저 시간간격안에 겹치지 않는 노드들 삭제
-    for(var i=0; i<net_size; i++){
-
+    // 먼저 삭제할 노드들을 어레이에 따로 저장.
+    for(var i=0; i<this.nodesArray.length; i++){
         if(!_.contains(target_nodes_ids, this.nodesArray[i].id)){
-            // node_to_remove.push(_.indexOf(target_nodes_ids, this.nodesArray[i].id));
-            // this.nodesArray.splice(i, 1); /// removes 1 element from index i
-            node_to_remove.push(i);
-
-
+            console.log("push the id to array- " + this.nodesArray[i].id);
+            node_to_remove.push(this.nodesArray[i].id);
         }
-    }
-    for(var i; i<node_to_remove.length; i++){
-        s.graph.dropNode(node_to_remove[i]);
-        // this.nodesArray.splice(node_to_remove[i], 1);
-    }
-    console.log(this.nodesArray);
 
+    }
+    // 다음으로 삭제해야할 node들을 삭제.
+    for(var i=0; i<node_to_remove.length; i++){
+        s.graph.dropNode(node_to_remove[i]);
+    }
+
+
+    // 다음으로 node update, 기존에 존재하는 노드일 경우 attribute만 업데이트.
+    // 존재하지 않은 노드일 경우 새로 추가.
     var source_nodes_ids = _.pluck(this.nodesArray, 'id');
-    // 다음으로 node update
     for(var i=0; i<target_nodes.length; i++){
 
         var target = target_nodes[i];
         if(_.contains(source_nodes_ids, target.course_id)){
             var temp_index = _.indexOf(source_nodes_ids, target.course_id);
-            console.log("Matched!!");
-            // console.log(this.nodesArray[i]);
             this.nodesArray[temp_index].target_color = target.color;
             this.nodesArray[temp_index].target_x = target.x;
             this.nodesArray[temp_index].target_y = target.y;
             this.nodesArray[temp_index].target_size = target.size;
 
         }else{
-            this.nodesArray.push({
+            s.graph.addNode({
                 id: target.course_id,
                 node_id: target.attributes.index,
                 label: target.attributes.title,
-                x: target.x,
-                y: target.y,
-                size: target.size,
+                x: 0,
+                y: 0,
+                size: 0,
                 color: target.color,
                 area: target.attributes.area,
                 subject: target.attributes.subject,
                 provider: target.attributes.provider,
                 school: target.attributes.school,
 
-
                 // this is for animating node
-                target_color: "#FFFFFF",
-                target_size: 10,
-                target_x: -100,
-                target_y: -100
+                target_color: target.color,
+                target_size: target.size,
+                target_x: target.x,
+                target_y: target.y
 
-            })
+            });
+
         }
 
     }
-
-    console.log(this.nodesArray);
-    console.log(s.graph.nodes())
-
+    console.log("End of update node");
 
 });
 
