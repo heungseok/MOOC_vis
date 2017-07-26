@@ -134,8 +134,9 @@ function sigma_init(network){
 
 // ####################### Init utility ####################
 
-// attach addTargetNodeAttr function to sigma graph method
-sigma.classes.graph.addMethod('add_TargetNode_Attr', function(target_nodes) {
+// attach nodeUpdate function to sigma graph method
+sigma.classes.graph.addMethod('nodeUpdate', function(target_nodes) {
+    console.log("Update node");
     // nodesArray는 node info를 담고있는 sigma class 내장 변수인듯,
 
     // underscore.js의 pluck을 이용해서 target_nodes 의 각 object에서 course_id만 뽑아서 array로 만듬.
@@ -146,7 +147,7 @@ sigma.classes.graph.addMethod('add_TargetNode_Attr', function(target_nodes) {
     // 먼저 삭제할 노드들을 어레이에 따로 저장.
     for(var i=0; i<this.nodesArray.length; i++){
         if(!_.contains(target_nodes_ids, this.nodesArray[i].id)){
-            console.log("push the id to array- " + this.nodesArray[i].id);
+            // console.log("push the id to array- " + this.nodesArray[i].id);
             node_to_remove.push(this.nodesArray[i].id);
         }
 
@@ -155,7 +156,6 @@ sigma.classes.graph.addMethod('add_TargetNode_Attr', function(target_nodes) {
     for(var i=0; i<node_to_remove.length; i++){
         s.graph.dropNode(node_to_remove[i]);
     }
-
 
     // 다음으로 node update, 기존에 존재하는 노드일 경우 attribute만 업데이트.
     // 존재하지 않은 노드일 경우 새로 추가.
@@ -203,113 +203,81 @@ sigma.classes.graph.addMethod('add_TargetNode_Attr', function(target_nodes) {
 
 
 // attach updateEdge function to sigma graph method
-sigma.classes.graph.addMethod('updateEdge', function(target_network){
-    var edge_length = this.edgesArray.length;
-    var node_length = this.nodesArray.length;
+sigma.classes.graph.addMethod('updateEdge', function(target_edges, time){
+    console.log("Update edge");
+    
+    // 1. 더이상 존재하지 않는 엣지 삭제
+    // 2.1. 새로운 쌍의 source, target이 나올 경우 추가.
+    // 2.2. 이미 있는 edge의 경우 attribute만 변경
+    
+    console.log(target_edges);
+    console.log(this.edgesArray);
 
-    var source, target;
 
-    var tar_source, tar_target;
+    // 현재 저장되어 있는 edge의 source, target만 extract
+    var existing_edges = _.map(
+        this.edgesArray, function (edge) {
+            return { source: edge.source, target: edge.target}
+        }
+    );
+    console.log(existing_edges);
+    var new_edges = _.map(
+        target_edges, function (edge) {
+            return { source: edge.source, target: edge.target}
+        }
+    );
 
+    // 1. 더이상 존재하지 않는 엣지 삭제
+    // 먼저 target edge가 현재 존재하는지 check하고, 없을 경우 삭제. 
+    var remove_edge_ids = [];
+    for(var i=0; i< existing_edges.length; i++){
 
-    // edge check whther exsting or not
-    for(i=0; i<edge_length; i++){
-        source = s.graph.nodes(this.edgesArray[i].source).node_id;
-        target = s.graph.nodes(this.edgesArray[i].target).node_id;
+        // 없을 경우 undefined return,
+        var result = _.findWhere(new_edges, existing_edges[i]);
+        if(result === undefined){
+            // console.log("remove edge: " + existing_edges[i].source + "-" + existing_edges[i].target);
+            remove_edge_ids.push(this.edgesArray[i].id);
+        }
+    }
+    
+    // edge remove
+    for(var i=0; i<remove_edge_ids.length; i++){
+        s.graph.dropEdge(remove_edge_ids[i]);
+    }
 
-        for(edge_index in target_network.edges){
-            var temp_source = target_network.edges[index].source;
-            var temp_target = target_network.edges[index].target;
+    // 2.1. 새로운 쌍의 source, target이 나올 경우 추가.
+    // 2.2. 이미 있는 edge의 경우 attribute만 변경
+    for(var i=0; i<new_edges.length; i++){
+        // return 값이 undefined 일 경우 새로운 edge이므로 추가.
+        var result = _.findWhere(existing_edges, new_edges[i]);
+        if (result == undefined){
+            s.graph.addEdge({
+                    id: time + "-" + target_edges[i].id,
+                    source: target_edges[i].source,
+                    target: target_edges[i].target,
+                    size: target_edges[i].size,
+                    color: target_edges[i].color,
+                    type: "curvedArrow",
+                    flag: false
+                });
 
-            // find unified node_id from other network
-            for(node_index in target_network.nodes){
-                var temp_node = target_network.nodes[node_index];
-
-                if(temp_node.id == temp_source){
-                    tar_source = temp_node.attributes.node_id;
-                }else if(temp_node.id == temp_target){
-                    tar_target = temp_node.attributes.node_id;
+        }else{
+            var edge_index;
+            _.find(existing_edges, function (item, index) {
+                if (item == result){
+                    edge_index = index;
                 }
-
+            });
+            if(this.edgesArray[edge_index] != undefined){
+                this.edgesArray[edge_index].size = target_edges[i].size;
+                this.edgesArray[edge_index].size = target_edges[i].color;
             }
 
-            // if each edge is equal, change flag as true;
-            if(source == tar_source && target == tar_target){
-                this.edgesArray[i].flag = true;
-            }
         }
     }
-
-
-    // add the id of the edges having true flag
-    var deleteEdgeArr = [];
-    for(index in this.edgesArray){
-        if(!this.edgesArray[index].flag) deleteEdgeArr.push(this.edgesArray[index].id);
-    }
-    // delete edges which have false flag
-    deleteEdgeArr.forEach(function(id){
-        s.graph.dropEdge(id);
-    });
-
+    console.log("End of update edge");
 
 });
-
-
-// attach updateEdge function to sigma graph method
-sigma.classes.graph.addMethod('updateEdge2', function(target_network){
-    // clear previous edge list, we will change from all edges to new edge.
-    // (cuz edge id and node id are quite different..)
-    // this.edgesArray.length = 0;
-    // delete this.edgesArray;
-    // this.edgesArray = [];
-
-    s.graph.clearEdge();
-
-
-    var edge_length = target_network.edges.length;
-    var nodeArr_length = this.nodesArray.length;
-    var origin_source, origin_target;
-
-
-    for(i=0; i<edge_length; i++){
-        var target_edge = target_network.edges[i];
-
-        var source_id, target_id;
-
-        // find node_id from target_network.
-        for(j in target_network.nodes){
-            // console.log(target_network.nodes[j]);
-            if(target_network.nodes[j].course_id == target_edge.source)
-                source_id = target_network.nodes[j].course_id;
-            else if(target_network.nodes[j].course_id == target_edge.target)
-                target_id = target_network.nodes[j].course_id;
-        }
-
-        // find real node id from origin network
-        for(k in this.nodesArray){
-            if(this.nodesArray[k].node_id == source_id)
-                origin_source = this.nodesArray[k].id;
-            else if(this.nodesArray[k].node_id == target_id)
-                origin_target = this.nodesArray[k].id;
-
-        }
-
-        var newEdge = {
-            id: target_network.time + "-" + target_edge.id,
-            source: origin_source,
-            target: origin_target,
-            size: target_edge.size,
-            color: target_edge.color,
-            type: "curvedArrow",
-            flag: false
-
-        }
-        s.graph.addEdge(newEdge);
-
-    }
-
-});
-
 
 // ####################### END of utility ####################
 
@@ -405,8 +373,8 @@ function changeNetwork(from, to){
 
     console.log(from + "-" + to )
     var target_network = network_arr[to-1];
-    s.graph.add_TargetNode_Attr(target_network.nodes);
-    // s.graph.updateEdge2(target_network);
+    s.graph.nodeUpdate(target_network.nodes);
+    s.graph.updateEdge(target_network.edges, to);
     animation();
 }
 
