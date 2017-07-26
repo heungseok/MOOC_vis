@@ -424,6 +424,7 @@ function switchPlatform(btn_platform) {
     if(targetPlatform !== platform){
         platform = targetPlatform;
         cleanNetwork();
+        canvasClear();
         switchNetwork();
     }
     // 같을 경우 do nothing;
@@ -435,17 +436,32 @@ function cleanNetwork() {
     g.edges.length = 0;
     g.nodes = [];
     g.edges = [];
+    
+    
+}
+
+
+function canvasClear() {
+    // 수정해야함~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    var canvas = document.getElementsByClassName('sigma-scene')[0];
+    var context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    canvas = document.getElementsByClassName('sigma-mouse')[0];
+    context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 function switchNetwork() {
-    console.log(platform)
-    url_arr = [];
+    
+    url_arr.length =0;
+    network_arr.length = 0;
     array_index = 0;
     url_arr = [
         "../data/t1_" + platform + "_network.json",
-        "../data/t1_" + platform + "_network.json",
-        "../data/t1_" + platform + "_network.json",
-        "../data/t1_" + platform + "_network.json"
+        "../data/t2_" + platform + "_network.json",
+        "../data/t3_" + platform + "_network.json",
+        "../data/t4_" + platform + "_network.json"
     ];
     return init();
 
