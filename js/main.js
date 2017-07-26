@@ -67,7 +67,8 @@ function sigma_init(network){
             x: node.x,
             y: node.y,
             size: node.size,
-            color: node.color,
+            // color: node.color,
+            color: node.area_color,
             area: node.attributes.area,
             subject: node.attributes.subject,
             provider: node.attributes.provider,
@@ -91,7 +92,8 @@ function sigma_init(network){
             source: edge.source,
             target: edge.target,
             size: edge.size,
-            color: edge.color,
+            // color: edge.color,
+            color: edge.area_color,
             type: "curvedArrow",
             flag: false
 
@@ -115,7 +117,7 @@ function sigma_init(network){
             minArrowSize: 5,
             defaultLabelSize: 30,
             animationTime: 3000,
-            minNodeSize: 3,
+            minNodeSize: 1,
             maxNodeSize: 17,
             labelThreshold: 17,
             sideMargin: 70
@@ -165,7 +167,8 @@ sigma.classes.graph.addMethod('nodeUpdate', function(target_nodes) {
         var target = target_nodes[i];
         if(_.contains(source_nodes_ids, target.course_id)){
             var temp_index = _.indexOf(source_nodes_ids, target.course_id);
-            this.nodesArray[temp_index].target_color = target.color;
+            // this.nodesArray[temp_index].target_color = target.color;
+            this.nodesArray[temp_index].target_color = target.area_color;
             this.nodesArray[temp_index].target_x = target.x;
             this.nodesArray[temp_index].target_y = target.y;
             this.nodesArray[temp_index].target_size = target.size;
@@ -178,14 +181,16 @@ sigma.classes.graph.addMethod('nodeUpdate', function(target_nodes) {
                 x: 0,
                 y: 0,
                 size: 0,
-                color: target.color,
+                // color: target.color,
+                color: target.area_color,
                 area: target.attributes.area,
                 subject: target.attributes.subject,
                 provider: target.attributes.provider,
                 school: target.attributes.school,
 
                 // this is for animating node
-                target_color: target.color,
+                // target_color: target.color,
+                target_color: target.area_color,
                 target_size: target.size,
                 target_x: target.x,
                 target_y: target.y
@@ -210,17 +215,13 @@ sigma.classes.graph.addMethod('updateEdge', function(target_edges, time){
     // 2.1. 새로운 쌍의 source, target이 나올 경우 추가.
     // 2.2. 이미 있는 edge의 경우 attribute만 변경
     
-    console.log(target_edges);
-    console.log(this.edgesArray);
-
-
     // 현재 저장되어 있는 edge의 source, target만 extract
     var existing_edges = _.map(
         this.edgesArray, function (edge) {
             return { source: edge.source, target: edge.target}
         }
     );
-    console.log(existing_edges);
+    // 새로운 edge의 source, target만 extract
     var new_edges = _.map(
         target_edges, function (edge) {
             return { source: edge.source, target: edge.target}
@@ -256,7 +257,8 @@ sigma.classes.graph.addMethod('updateEdge', function(target_edges, time){
                     source: target_edges[i].source,
                     target: target_edges[i].target,
                     size: target_edges[i].size,
-                    color: target_edges[i].color,
+                    // color: target_edges[i].color,
+                    color: target_edges[i].area_color,
                     type: "curvedArrow",
                     flag: false
                 });
@@ -270,7 +272,8 @@ sigma.classes.graph.addMethod('updateEdge', function(target_edges, time){
             });
             if(this.edgesArray[edge_index] != undefined){
                 this.edgesArray[edge_index].size = target_edges[i].size;
-                this.edgesArray[edge_index].size = target_edges[i].color;
+                // this.edgesArray[edge_index].size = target_edges[i].color;
+                this.edgesArray[edge_index].size = target_edges[i].area_color;
             }
 
         }
@@ -394,8 +397,7 @@ function animation(){
             duration: 2000,
             onComplete: function() {
                 console.log("success!");
-                console.log(s.graph.nodes());
-
+                // console.log(s.graph.nodes());
 
                 // do stuff here after animation is complete
             }
