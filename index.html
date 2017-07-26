@@ -92,13 +92,31 @@
     </nav>
 
     <div id="container">
+        <div id="basic-info-pane">
+            <h2 class="underline">Color Info</h2>
+            <div class="colorCode-info">
+                <span class="colorCode" style="color:#862a31">Arts and Humanities<br></span>
+                <span class="colorCode" style="color:#2d8d2d">Personal Development<br></span>
+                <span class="colorCode" style="color:#7e552c">Language Learning<br></span>
+                <span class="colorCode" style="color:#767c2b">Social Sciences<br></span>
+                <span class="colorCode" style="color:#7e4b2c">Business<br></span>
+                <span class="colorCode" style="color:#284562">Computer Science<br></span>
+                <span class="colorCode" style="color:#342f69">Data Science<br></span>
+                <span class="colorCode" style="color:#702a70">Life Sciences<br></span>
+                <span class="colorCode" style="color:#4d3275">Physical Science and Engineering<br></span>
+                <span class="colorCode" style="color:#250751">Math and Logic<br></span>
+
+            </div>
+
+        </div>
         <div id="graph-container"></div>
+        <div id="pc-container"></div>
 
         <div id="control-pane">
-            <h2 class="underline">filters</h2>
+            <h2 class="underline">Play</h2>
 
             <div>
-                <h3>T <span id="current_date">1</span></h3>
+                <h3>T-<span id="current_date">1</span></h3>
                 1 <input id="min-degree" type="range" min="1" max="4" value="0" step="1" onchange="showValue(this.value)" /> <span id="max-degree-value">4</span><br>
             </div>
             <span class="line"></span>
@@ -114,11 +132,6 @@
     </div>
 
     <script src="./js/main.js"></script>
-
-
-
-
-
 
     <!-- Modals -->
     <div id="aboutModal" class="modal">
