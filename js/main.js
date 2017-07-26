@@ -1,5 +1,7 @@
 var network_arr = [];
-var platform = "classCentral"
+var array_index = 0;
+// var platform = "classCentral";
+var platform = "courseTalk";
 var s,
     g = {
         nodes: [],
@@ -9,41 +11,52 @@ var s,
 
 var url_arr = [
     "../data/t1_" + platform + "_network.json",
-    "../data/t1_" + platform + "_network.json",
-    "../data/t1_" + platform + "_network.json",
-    "../data/t1_" + platform + "_network.json"
+    "../data/t2_" + platform + "_network.json",
+    "../data/t3_" + platform + "_network.json",
+    "../data/t4_" + platform + "_network.json"
     ];
-
 
 /*
  json data import and push to network array
  */
-
-
 $(document).ready(function(){
     init();
 
 });
 
 function init() {
+
     $.getJSON(url_arr[0], function(data, textStatus, jqXHR){
         network_arr.push(data);
         sigma_init(network_arr[0]);
-
+            // array_index++;
+            // requestData();
     });
+
     for(var i=1; i<url_arr.length;i++){
         requestData(i);
     }
 }
 
+// function requestData(){
+//     if(array_index == url_arr.length)
+//         return;
+//
+//     $.getJSON(url_arr[array_index], function(data, textStatus, jqXHR){
+//         network_arr.push(data);
+//         network_arr.sort(compare);
+//         array_index++;
+//         requestData();
+//     });
+// }
+
+
 function requestData(index){
 
     $.getJSON(url_arr[index], function(data, textStatus, jqXHR){
-
         network_arr.push(data);
         network_arr.sort(compare);
     });
-
 }
 
 function compare(a,b){
@@ -426,15 +439,14 @@ function cleanNetwork() {
 
 function switchNetwork() {
     console.log(platform)
-    url_arr.length = 0;
+    url_arr = [];
+    array_index = 0;
     url_arr = [
         "../data/t1_" + platform + "_network.json",
         "../data/t1_" + platform + "_network.json",
         "../data/t1_" + platform + "_network.json",
         "../data/t1_" + platform + "_network.json"
     ];
-    init();
+    return init();
 
-
-    
 }
