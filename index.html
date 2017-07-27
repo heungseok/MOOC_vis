@@ -76,8 +76,8 @@
     <link rel="stylesheet" type="text/css" href="./lib/parcoords/d3.parcoords.css">
 
     <!-- LOAD UNDERSCORE LIb -->
-    <script src="js/underscore.js"></script>
-    <script src="js/underscore.math.js"></script>
+    <script src="./js/underscore.js"></script>
+    <script src="./js/underscore.math.js"></script>
 
 
     <nav class="navbar navbar-inverse navbar-fixed-top" style="position: absolute; left:0; top:0">
@@ -119,8 +119,9 @@
         </div>
         <div id="graph-container" class="sigma"></div>
         <div id="pc-container" class="parcoords"></div>
+        <script src="./js/main.js"></script>
         <script src="./js/sigma_main.js"></script>
-        <script src="js/parallel_coordinates.js"></script>
+        <script src="./js/parallel_coordinates.js"></script>
 
 
 
@@ -132,13 +133,13 @@
             <h2 class="underline">Platform</h2>
             <div>
                 <button class="platform" onclick="switchPlatform(this)">classCentral</button>
-                <button class="platform" onclick="switchPlatform(this)">courseTalk</button>
+                <button class="platform" onclick="switchPlatform(this)">CourseTalk</button>
 
             </div>
 
             <h2 class="underline">Play</h2>
             <div>
-                <h3>T-<span id="current_date">1</span></h3>
+                <h3>T-<span id="current_date">1 </span> <span id="time_period">7.13.~6.14.</span> </h3>
                 1 <input id="min-degree" type="range" min="1" max="4" value="1" step="1" onchange="showValue(this.value)" /> <span id="max-degree-value">4</span><br>
             </div>
             <span class="line"></span>
