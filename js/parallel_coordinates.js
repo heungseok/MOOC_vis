@@ -11,7 +11,7 @@ function init_parcoords() {
 
 
         // 데이터 extract by time, review platform
-        par_data = _.where(data, {review_platform: platform, time:String(current_time)});
+        par_data = _.where(data, {review_platform: platform, time:String(current_time), session_open:"TRUE"});
         console.log(par_data);
 
         var colorgen = d3.scale.ordinal()
@@ -23,8 +23,11 @@ function init_parcoords() {
 
         parcoords
             .data(par_data)
-            .hideAxis(["course_id", "review_platform", "title", "school", "subject", "price", "level",
-                "course_length", "effort_hours", "published_time", "time", "session_open", "url"])
+            .hideAxis(["course_id", "provider", "review_platform", "title", "school", "subject", "price", "level",
+                "course_length", "effort_hours", "published_time", "time", "session_open", "url",
+                "low rating ratio",	"mid rating ratio",	"high rate ratio", "helpfulness score (ratio)",
+                "indegree", "outdegree"
+            ])
             .color(color)
             .alpha(0.25)
             .composite("darken")
