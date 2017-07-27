@@ -66,11 +66,19 @@
 
 
 
-    <script src="./js/underscore.js"></script>
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="https://d3js.org/d3-color.v1.min.js"></script>
-    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <!-- LOAD D3 LIb -->
+    <!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
+    <!--<script src="https://d3js.org/d3-color.v1.min.js"></script>-->
+    <!--<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>-->
+    <script src="./lib/parcoords/lib/d3.js"></script>
+    <script src="./lib/parcoords/lib/d3.svg.multibrush.js"></script>
+    <script src="./lib/parcoords/d3.parcoords.js"></script>
+    <link rel="stylesheet" type="text/css" href="./lib/parcoords/d3.parcoords.css">
+
+    <!-- LOAD UNDERSCORE LIb -->
     <script src="js/underscore.js"></script>
+    <script src="js/underscore.math.js"></script>
+
 
     <nav class="navbar navbar-inverse navbar-fixed-top" style="position: absolute; left:0; top:0">
         <div class="container-fluid">
@@ -109,8 +117,16 @@
             </div>
 
         </div>
-        <div id="graph-container"></div>
-        <div id="pc-container"></div>
+        <div id="graph-container" class="sigma"></div>
+        <div id="pc-container" class="parcoords"></div>
+        <script src="./js/sigma_main.js"></script>
+        <script src="js/parallel_coordinates.js"></script>
+
+
+
+
+
+
 
         <div id="control-pane">
             <h2 class="underline">Platform</h2>
@@ -123,21 +139,21 @@
             <h2 class="underline">Play</h2>
             <div>
                 <h3>T-<span id="current_date">1</span></h3>
-                1 <input id="min-degree" type="range" min="1" max="4" value="0" step="1" onchange="showValue(this.value)" /> <span id="max-degree-value">4</span><br>
+                1 <input id="min-degree" type="range" min="1" max="4" value="1" step="1" onchange="showValue(this.value)" /> <span id="max-degree-value">4</span><br>
             </div>
             <span class="line"></span>
             <div>
-                <button id="reset-btn">Reset</button>
-                <button id="plus-btn">Plus</button>
-                <button id="minus-btn">Minus</button>
-                <button id="play-btn">Play</button>
+                <button id="reset-btn" onclick="t_reset()">Reset</button>
+                <button id="plus-btn" onclick="t_plus()">Plus</button>
+                <button id="minus-btn" onclick="t_minus()">Minus</button>
+                <button id="play-btn" onclick="t_play()">Play</button>
             </div>
             <div id="dump" class="hidden"></div>
         </div>
 
     </div>
 
-    <script src="./js/main.js"></script>
+
 
     <!-- Modals -->
     <div id="aboutModal" class="modal">
